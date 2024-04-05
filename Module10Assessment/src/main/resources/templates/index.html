@@ -99,14 +99,22 @@
             background-color: #ddd;
             color: #000;
         }
+
+        .error-message {
+            color: red;
+            margin-top: 5px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Task Manager</h1>
-        <form action="/add" method="post">
-            <input type="text" name="name" placeholder="Enter Task Name" required>
-            <input type="text" name="description" placeholder="Enter Task Description" required>
+        <form id="taskForm" action="/add" method="post" onsubmit="return validateForm()">
+            <input type="text" id="taskName" name="name" placeholder="Enter Task Name" required oninvalid="this.setCustomValidity('Task name is required')" onchange="this.setCustomValidity('')">
+            <div class="error-message" id="nameError"></div>
+            <input type="text" id="taskDescription" name="description" placeholder="Enter Task Description" required oninvalid="this.setCustomValidity('Task description is required')" onchange="this.setCustomValidity('')">
+            <div class="error-message" id="descriptionError"></div>
             <button type="submit">Add Task</button>
         </form>
         <table>
@@ -127,5 +135,29 @@
             </tr>
         </table>
     </div>
+
+    <script>
+        function validateForm() {
+            var name = document.getElementById("taskName").value.trim();
+            var description = document.getElementById("taskDescription").value.trim();
+            var isValid = true;
+
+            if (name === "") {
+                document.getElementById("nameError").innerText = "Task name is required";
+                isValid = false;
+            } else {
+                document.getElementById("nameError").innerText = "";
+            }
+
+            if (description === "") {
+                document.getElementById("descriptionError").innerText = "Task description is required";
+                isValid = false;
+            } else {
+                document.getElementById("descriptionError").innerText = "";
+            }
+
+            return isValid;
+        }
+    </script>
 </body>
 </html>

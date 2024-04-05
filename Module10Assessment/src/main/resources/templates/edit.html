@@ -56,17 +56,51 @@
         button:hover {
             background-color: #45a049;
         }
+
+        .error-message {
+            color: red;
+            margin-top: 5px;
+            font-size: 14px;
+            width: 100%;
+            text-align: left;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Edit Task</h1>
-        <form th:action="@{/update/{id}(id=${task.id})}" method="post">
+        <form id="editTaskForm" th:action="@{/update/{id}(id=${task.id})}" method="post" onsubmit="return validateEditForm()">
             <input type="hidden" name="id" th:value="${task.id}">
-            <input type="text" name="name" th:value="${task.name}" required>
-            <input type="text" name="description" th:value="${task.description}" required>
+            <input type="text" id="editTaskName" name="name" th:value="${task.name}" required oninvalid="this.setCustomValidity('Task name is required')" onchange="this.setCustomValidity('')">
+            <div class="error-message" id="editNameError"></div>
+            <input type="text" id="editTaskDescription" name="description" th:value="${task.description}" required oninvalid="this.setCustomValidity('Task description is required')" onchange="this.setCustomValidity('')">
+            <div class="error-message" id="editDescriptionError"></div>
             <button type="submit">Update Task</button>
         </form>
     </div>
+
+    <script>
+        function validateEditForm() {
+            var name = document.getElementById("editTaskName").value.trim();
+            var description = document.getElementById("editTaskDescription").value.trim();
+            var isValid = true;
+
+            if (name === "") {
+                document.getElementById("editNameError").innerText = "Task name is required";
+                isValid = false;
+            } else {
+                document.getElementById("editNameError").innerText = "";
+            }
+
+            if (description === "") {
+                document.getElementById("editDescriptionError").innerText = "Task description is required";
+                isValid = false;
+            } else {
+                document.getElementById("editDescriptionError").innerText = "";
+            }
+
+            return isValid;
+        }
+    </script>
 </body>
 </html>
